@@ -1,5 +1,27 @@
+/*
+Design a scheduler that uses a preemptive priority scheduling algorithm based on 
+dynamically changing priority.Larger number for priority indicates higher priority. 
+Assume that the following processes with arrival time and service time wants to execute 
+(for reference): 
+ProcessID         Arrival Time     Service Time 
+P1                    0                 4 
+P2                    1                 1 
+P3                    2                 2 
+P4                    3                 1 
+When the process starts execution (i.e. CPU assigned), priority for that process changes 
+at the rate of m=1.When the process waits for CPU in the ready queue (but not yet started 
+execution), its priority changes at a rate n=2. All the processes are initially assigned 
+priority value of 0 when they enter ready queue for the first time . The time slice for 
+each process is q = 1. When two processes want to join ready queue simultaneously,
+the process which has not executed recently is given priority. Calculate the average 
+waiting time for each process.The program must be generic i.e. number of processes, 
+their burst time and arrival time must be entered by user. 
+*/
+
 #include<stdio.h>
 #include<conio.h>
+#include<stdlib.h>
+
 static int n;
 struct process
 {
@@ -8,48 +30,76 @@ struct process
 	int ArrivalTime;
 	int processedFlag;
 	char ProcessID[5];
-};
-process processCreation()
+	
+	process *link;
+}*front=NULL,*rear=NULL;
+void processCreation()
 {
 	printf("Enter Number of process you want to enter:");
 	scanf("%d",&n);
-	process allProcess[n];
+	process *newProcess;
 	for(int i=0;i<n;i++)
 	{
+		newProcess=(*process)malloc(sizeof(process));
+		
 		printf("\nEnter Process ID:");
-		scanf("%s",&allProcess[i].ProcessID);
+		scanf("%s",&newProcess->ProcessID);
 		printf("Enter Process Arival time:");
-		scanf("%d",&allProcess[i].ArrivalTime);
+		scanf("%d",&newProcess->ArrivalTime);
 		printf("Enter Process Service Time:");
-		scanf("%d",&allProcess[i].ServiceTime);
-		allProcess[i].priority=0;
-		allProcess[i].processedFlag=0;
+		scanf("%d",&newProcess->ServiceTime);
+		newProcess->priority=0;
+		newProcess->processedFlag=0;
+		newProcess->link=NULL;
+		if(front==NULL)
+			rear=front=newProcess;
+		else
+		{
+			rear->link=newProcess;
+			rear=newProcess;
+		}
 	}
-	return sortProcess(allProcess);
+	sortProcess();
 }
-process sortProcess(process p[])
+void sortProcess()
 {
-	int a;
-	for(i=0;i<n;++i)
+    struct Node *l=NULL,*p;
+
+    if(front==NULL)
+        return front;
+    else
     {
-        for(j=i+1;j<n;++j)
-        {
-            if(P[i].ArrivalTime>P[j].ArrivalTime) 
-            {
-                a=P[i].ArrivalTime;
-                P[i].ArrivalTime=P[j].ArrivalTime;
-                P[j].ArrivalTime=a;
-            }
-        }
+    	do
+    	{
+    		swaped=0;
+    		p=front;
+ 
+        	while(p->link!=NULL)
+        	{
+        	    if(p->ArrivalTime> p->link->ArrivalTime)
+       	    	{ 
+       	    	    swap(p,p->link);
+       	    	    swaped=1;
+       	   	    }
+        	    p=p->next;
+        	}
+        	l=p;
+		}while(swaped)
+        
     }
-    return p;
 }
-void processor(process readyQueue[])
+void swap(process *a,process *b)
 {
-	process executing[n];
-	for(int i=readyQueue[0].ArrivalTime;1;i++)
+    process *temp = a;
+    a=b;
+    b=temp;
+}
+void processor()
+{
+	process *p=front;
+	for(int i=p->ArrivalTime;1;i++)
 	{
-		execution[i]=readyQueue[i];
+		
 			
 	}
 }
